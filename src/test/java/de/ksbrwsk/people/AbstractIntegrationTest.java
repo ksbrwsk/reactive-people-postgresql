@@ -21,8 +21,8 @@ public abstract class AbstractIntegrationTest {
 
         @Container
         static PostgreSQLContainer postgres =
-                (PostgreSQLContainer) new PostgreSQLContainer("postgres:12")
-                        .withInitScript("schema.sql");
+                (PostgreSQLContainer) new PostgreSQLContainer("postgres:12");
+                        //.withInitScript("schema.sql");
 
         public static Map<String, String> getProperties() {
             Startables.deepStart(Stream.of(postgres)).join();
@@ -32,7 +32,12 @@ public abstract class AbstractIntegrationTest {
                             + postgres.getHost() + ":" + postgres.getFirstMappedPort()
                             + "/" + postgres.getDatabaseName(),
                     "spring.r2dbc.username", postgres.getUsername(),
-                    "spring.r2dbc.password", postgres.getPassword()
+                    "spring.r2dbc.password", postgres.getPassword(),
+                    "spring.flyway.url", "jdbc:postgresql://"
+                            + postgres.getHost() + ":" + postgres.getFirstMappedPort()
+                            + "/" + postgres.getDatabaseName(),
+                    "spring.flyway.user", postgres.getUsername(),
+                    "spring.flyway.password", postgres.getPassword()
             );
         }
 

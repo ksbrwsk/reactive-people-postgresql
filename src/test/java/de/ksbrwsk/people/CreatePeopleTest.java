@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @DataR2dbcTest
 @Log4j2
 public class CreatePeopleTest {
-
+/*
     private final AtomicLong counter = new AtomicLong(1L);
 
     @Autowired
@@ -30,4 +30,6 @@ public class CreatePeopleTest {
         }
         this.personRepository.saveAll(people).blockLast();
     }
+ */
 }
+

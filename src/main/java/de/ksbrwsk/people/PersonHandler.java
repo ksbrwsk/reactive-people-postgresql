@@ -19,7 +19,7 @@ public class PersonHandler {
     private final PersonRepository personRepository;
 
     Mono<ServerResponse> handleFindAll(ServerRequest serverRequest) {
-        log.info("Handle findAll");
+        log.info("Handle request {} {}", serverRequest.method(), serverRequest.path());
         Flux<Person> people = this.personRepository.findAll();
         return ServerResponse
                 .ok()
@@ -28,7 +28,7 @@ public class PersonHandler {
 
     Mono<ServerResponse> handleFindById(ServerRequest serverRequest) {
         var id = Long.parseLong(serverRequest.pathVariable("id"));
-        log.info("Handle findById -> {}", id);
+        log.info("Handle request {} {}", serverRequest.method(), serverRequest.path());
         Mono<Person> partnerMono = this.personRepository.findById(id);
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
@@ -42,7 +42,7 @@ public class PersonHandler {
 
     Mono<ServerResponse> handleDeleteById(ServerRequest serverRequest) {
         var id = Long.parseLong(serverRequest.pathVariable("id"));
-        log.info("Handle deleteById -> {}", id);
+        log.info("Handle request {} {}", serverRequest.method(), serverRequest.path());
         Mono<Mono<String>> monoMono = this.personRepository.findById(id)
                 .flatMap(this.personRepository::delete)
                 .thenReturn(Mono.just("successfully deleted!"));
@@ -53,7 +53,7 @@ public class PersonHandler {
 
     Mono<ServerResponse> handleSave(ServerRequest serverRequest) {
         Mono<Person> partnerMono = serverRequest.bodyToMono(Person.class);
-        log.info("Handle save -> {}", partnerMono);
+        log.info("Handle request {} {}", serverRequest.method(), serverRequest.path());
         return ServerResponse
                 .ok()
                 .body(fromPublisher(partnerMono.flatMap(this.personRepository::save), Person.class));
