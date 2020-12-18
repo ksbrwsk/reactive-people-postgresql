@@ -9,19 +9,19 @@
 * [Docker](https://www.docker.com/)
 * Optional [Postman](https://www.postman.com/)
 
-If you have Docker installed, grab an PostgreSQL image from Docker Hub and run the image.
+If you have Docker installed, grab a PostgreSQL image from Docker Hub and run the image.
 ```bash
 docker pull bitnami/postgresql:12
 docker run --name postgresql -e POSTGRESQL_PASSWORD=password123 -e POSTGRES_DB=spring -p 5432:5432 bitnami/postgresql:12
 ```
-Or else, grab the image via 
+Or else, grab the app image via 
 ```bash
 docker pull ksabrwsk/reactive-talk-202012:1.0.0
 ```
 
-The PostgreSQL database schema is located under
+The PostgreSQL flyway database schemas are located under
 ```bash
-reactive-talk-202012/src/main/resources/schema.sql
+reactive-talk-202012/src/main/resources/db/migration
 ```
 
 Application properties can be configured in
