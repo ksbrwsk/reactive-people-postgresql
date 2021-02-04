@@ -2,6 +2,8 @@
 
 #### Demo code for my Reactive Spring Talk 12/2020.
 
+![Java CI with Maven](https://github.com/ksbrwsk/reactive-talk-202012/workflows/Java%20CI%20with%20Maven/badge.svg)
+
 **Prerequisites:**
 
 * [Java 15](https://adoptopenjdk.net/)
