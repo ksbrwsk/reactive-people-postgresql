@@ -1,4 +1,4 @@
-pipeline {
+node {
 
     stage 'Clone the project'
     git 'https://github.com/ksbrwsk/reactive-talk-202012.git'
