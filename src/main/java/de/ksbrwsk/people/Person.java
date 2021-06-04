@@ -12,4 +12,8 @@ public class Person {
     @Id
     private Long id;
     private String name;
+
+    public Person(String name) {
+        this.name = name;
+    }
 }

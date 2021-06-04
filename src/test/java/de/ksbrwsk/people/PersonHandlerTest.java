@@ -4,11 +4,11 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 @WebFluxTest
@@ -42,8 +43,7 @@ class PersonHandlerTest {
     @Test
     @DisplayName("should handle request find all")
     void should_handle_find_all() {
-        Mockito
-                .when(this.personRepository.findAll())
+        when(this.personRepository.findAll())
                 .thenReturn(Flux.just(
                         new Person(1L, "Name"),
                         new Person(2L, "Sabo")
@@ -67,13 +67,12 @@ class PersonHandlerTest {
     @Test
     @DisplayName("should handle request find by id x")
     void should_handle_find_by_id() {
-        Mockito
-                .when(this.personRepository.findById(1L))
+        when(this.personRepository.findById(1L))
                 .thenReturn(Mono.just(new Person(1L, "Name")));
 
         Person person = this.webTestClient
                 .get()
-                .uri(BASE_URL+"/1")
+                .uri(BASE_URL + "/1")
                 .exchange()
                 .expectStatus().is2xxSuccessful()
                 .expectBody(Person.class)
@@ -87,35 +86,34 @@ class PersonHandlerTest {
     @Test
     @DisplayName("should handle request find by unknown id x")
     void should_handle_find_by_unknown_id() {
-        Mockito
-                .when(this.personRepository.findById(1000L))
+        when(this.personRepository.findById(1000L))
                 .thenReturn(Mono.empty());
 
         this.webTestClient
                 .get()
-                .uri(BASE_URL+"/1000")
+                .uri(BASE_URL + "/1000")
                 .exchange()
                 .expectStatus()
-                .is4xxClientError();
+                .isNotFound();
     }
 
     @Test
     @DisplayName("should handle request delete by id x")
     void should_handle_delete_by_id() {
         Person person = new Person(1L, "Name");
-        Mockito
-                .when(this.personRepository.findById(any(Long.class)))
+        when(this.personRepository.findById(any(Long.class)))
                 .thenReturn(Mono.just(person));
-        Mockito
-                .when(this.personRepository.delete(any(Person.class)))
+        when(this.personRepository.delete(any(Person.class)))
                 .thenReturn(Mono.empty());
 
         String actual = this.webTestClient
                 .delete()
-                .uri(BASE_URL+"/1")
+                .uri(BASE_URL + "/1")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
                 .expectBody(String.class)
                 .returnResult()
                 .getResponseBody();
@@ -132,8 +130,7 @@ class PersonHandlerTest {
         Person person = new Person(1L, "Name");
         Mono<Person> personMono = Mono.just(person);
 
-        Mockito
-                .when(this.personRepository.save(person))
+        when(this.personRepository.save(person))
                 .thenReturn(personMono);
 
         Person result = this.webTestClient
@@ -159,5 +156,33 @@ class PersonHandlerTest {
                 .exchange()
                 .expectStatus()
                 .is4xxClientError();
+    }
+
+    @Test
+    @DisplayName("should handle request find first by name")
+    void should_handle_find_first_by_name() {
+        when(this.personRepository.findFirstByName(any(String.class)))
+                .thenReturn(Mono.just(new Person(1L, "First")));
+        this.webTestClient
+                .get()
+                .uri(BASE_URL + "/firstByName/First")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody(Person.class)
+                .value(person -> person.getName().equalsIgnoreCase("first"));
+    }
+
+    @Test
+    @DisplayName("should handle request find first by name not found")
+    void should_handle_find_first_by_name_not_found() {
+        when(this.personRepository.findFirstByName(any(String.class)))
+                .thenReturn(Mono.empty());
+        this.webTestClient
+                .get()
+                .uri(BASE_URL + "/firstByName/First")
+                .exchange()
+                .expectStatus()
+                .isNotFound();
     }
 }

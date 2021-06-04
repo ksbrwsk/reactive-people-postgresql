@@ -17,6 +17,7 @@ public class PersonRouter {
         return route()
                 .GET(BASE_URL, personHandler::handleFindAll)
                 .GET(BASE_URL + "/{id}", personHandler::handleFindById)
+                .GET(BASE_URL + "/firstByName/{name}", personHandler::handleFindFirstByName)
                 .DELETE(BASE_URL + "/{id}", personHandler::handleDeleteById)
                 .POST(BASE_URL, personHandler::handleSave)
                 .build();

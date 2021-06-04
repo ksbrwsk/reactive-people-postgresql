@@ -21,7 +21,7 @@ public abstract class AbstractIntegrationTest {
 
         @Container
         static PostgreSQLContainer postgres =
-                (PostgreSQLContainer) new PostgreSQLContainer("postgres:12");
+                new PostgreSQLContainer("postgres:12");
 
         public static Map<String, String> getProperties() {
             Startables.deepStart(Stream.of(postgres)).join();
