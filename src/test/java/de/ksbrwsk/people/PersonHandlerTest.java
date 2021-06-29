@@ -1,15 +1,13 @@
 package de.ksbrwsk.people;
 
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,24 +19,17 @@ import static org.mockito.Mockito.when;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 @WebFluxTest
-@ContextConfiguration(classes = {PersonHandler.class, PersonRouter.class})
+@Import({PersonHandler.class, PersonRouter.class})
 @Log4j2
 class PersonHandlerTest {
 
     private final static String BASE_URL = "/api/people";
 
     @Autowired
-    ApplicationContext applicationContext;
+    WebTestClient webTestClient;
 
     @MockBean
     PersonRepository personRepository;
-
-    private WebTestClient webTestClient;
-
-    @BeforeEach
-    void setUp() {
-        webTestClient = WebTestClient.bindToApplicationContext(applicationContext).build();
-    }
 
     @Test
     @DisplayName("should handle request find all")
@@ -74,7 +65,8 @@ class PersonHandlerTest {
                 .get()
                 .uri(BASE_URL + "/1")
                 .exchange()
-                .expectStatus().is2xxSuccessful()
+                .expectStatus()
+                .is2xxSuccessful()
                 .expectBody(Person.class)
                 .returnResult()
                 .getResponseBody();
@@ -106,7 +98,7 @@ class PersonHandlerTest {
         when(this.personRepository.delete(any(Person.class)))
                 .thenReturn(Mono.empty());
 
-        String actual = this.webTestClient
+        this.webTestClient
                 .delete()
                 .uri(BASE_URL + "/1")
                 .exchange()
@@ -115,16 +107,11 @@ class PersonHandlerTest {
                 .expectHeader()
                 .contentType(MediaType.APPLICATION_JSON)
                 .expectBody(String.class)
-                .returnResult()
-                .getResponseBody();
-
-        var expected = "successfully deleted!";
-        assertNotNull(actual);
-        assertEquals(expected, actual);
+                .value(msg -> msg.equals("successfully deleted!"));
     }
 
     @Test
-    @DisplayName("should handle request save person")
+    @DisplayName("should successfully handle request save person")
     void should_handle_save_person() {
 
         Person person = new Person(1L, "Name");
@@ -133,22 +120,55 @@ class PersonHandlerTest {
         when(this.personRepository.save(person))
                 .thenReturn(personMono);
 
-        Person result = this.webTestClient
+        this.webTestClient
                 .post()
                 .uri("/api/people")
-                .body(fromValue(person))
+                .bodyValue(person)
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
                 .expectBody(Person.class)
-                .returnResult()
-                .getResponseBody();
-        assertNotNull(result);
-        assertEquals(person, result);
+                .isEqualTo(person);
     }
 
     @Test
-    @DisplayName("should handle unknwon URL")
+    @DisplayName("should not successfully handle request save person - validation failed")
+    void should_handle_save_person_name_is_empty() {
+        this.webTestClient
+                .post()
+                .uri(BASE_URL)
+                .bodyValue(new Person(""))
+                .exchange()
+                .expectStatus()
+                .is4xxClientError();
+    }
+
+    @Test
+    @DisplayName("should not successfully handle request save person - validation failed")
+    void should_handle_save_person_name_greater_30_characters() {
+        this.webTestClient
+                .post()
+                .uri(BASE_URL)
+                .bodyValue(new Person("Name___greater___30___characters"))
+                .exchange()
+                .expectStatus()
+                .is4xxClientError();
+    }
+
+    @Test
+    @DisplayName("should not successfully handle request save person - validation failed")
+    void should_handle_save_person_name_is_null() {
+            this.webTestClient
+                .post()
+                .uri(BASE_URL)
+                .bodyValue(new Person(null))
+                .exchange()
+                .expectStatus()
+                .is4xxClientError();
+    }
+
+    @Test
+    @DisplayName("should handle unknown URL")
     void should_handle_not_found() {
         this.webTestClient
                 .get()
