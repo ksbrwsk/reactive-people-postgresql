@@ -3,6 +3,9 @@ package de.ksbrwsk.people;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -131,40 +134,25 @@ class PersonHandlerTest {
                 .isEqualTo(person);
     }
 
-    @Test
-    @DisplayName("should not successfully handle request save person - validation failed")
-    void should_handle_save_person_name_is_empty() {
+    /**
+     * Handle validation
+     * name is null
+     * name is empty
+     * name length gt 10
+     *
+     * @param name the name type String
+     */
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"01234567890"})
+    void should_handle_person_not_valid(String name) {
         this.webTestClient
                 .post()
-                .uri(BASE_URL)
-                .bodyValue(new Person(""))
+                .uri("/api/people")
+                .bodyValue(new Person(name))
                 .exchange()
                 .expectStatus()
-                .is4xxClientError();
-    }
-
-    @Test
-    @DisplayName("should not successfully handle request save person - validation failed")
-    void should_handle_save_person_name_greater_30_characters() {
-        this.webTestClient
-                .post()
-                .uri(BASE_URL)
-                .bodyValue(new Person("Name___greater___30___characters"))
-                .exchange()
-                .expectStatus()
-                .is4xxClientError();
-    }
-
-    @Test
-    @DisplayName("should not successfully handle request save person - validation failed")
-    void should_handle_save_person_name_is_null() {
-            this.webTestClient
-                .post()
-                .uri(BASE_URL)
-                .bodyValue(new Person(null))
-                .exchange()
-                .expectStatus()
-                .is4xxClientError();
+                .isBadRequest();
     }
 
     @Test

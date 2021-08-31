@@ -16,7 +16,7 @@ public class Person {
     private Long id;
 
     @NotNull
-    @Size(min = 1, max = 30)
+    @Size(min = 1, max = 10)
     private String name;
 
     public Person(String name) {
