@@ -20,6 +20,7 @@ public class PersonRouter {
                 .GET(BASE_URL + "/firstByName/{name}", personHandler::handleFindFirstByName)
                 .DELETE(BASE_URL + "/{id}", personHandler::handleDeleteById)
                 .POST(BASE_URL, personHandler::handleSave)
+                .PUT(BASE_URL + "/{id}", personHandler::handleUpdate)
                 .build();
     }
 }

@@ -2,7 +2,6 @@ package de.ksbrwsk.people;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -13,12 +12,14 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static org.springframework.web.reactive.function.server.ServerResponse.*;
 
 @Component
 @Log4j2
@@ -38,8 +39,7 @@ public class PersonHandler {
         var id = Long.parseLong(serverRequest.pathVariable("id"));
         log.info("Handle request {} {}", serverRequest.method(), serverRequest.path());
         Mono<Person> partnerMono = this.personRepository.findById(id);
-        Mono<ServerResponse> notFound = ServerResponse
-                .notFound()
+        Mono<ServerResponse> notFound = notFound()
                 .build();
         return partnerMono
                 .flatMap(partner -> ok()
@@ -54,33 +54,52 @@ public class PersonHandler {
                 .flatMap(this.personRepository::delete)
                 .thenReturn(Mono.just("successfully deleted!"));
         return monoMono.flatMap(resp -> ok()
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .body(resp, String.class));
     }
-
-
 
     public Mono<ServerResponse> handleFindFirstByName(ServerRequest serverRequest) {
         log.info("Handle request {} {}", serverRequest.method(), serverRequest.path());
         var name = serverRequest.pathVariable("name");
         Mono<Person> firstByName = this.personRepository.findFirstByName(name);
-        Mono<ServerResponse> notFound = ServerResponse.notFound().build();
+        Mono<ServerResponse> notFound = notFound().build();
         return firstByName.flatMap(person -> ok()
-                .body(fromValue(person)))
+                        .body(fromValue(person)))
                 .switchIfEmpty(notFound);
     }
 
     Mono<ServerResponse> handleSave(ServerRequest serverRequest) {
-        Mono<Person> partnerMono = serverRequest.bodyToMono(Person.class)
-                .doOnNext(this::validate);
         log.info("Handle request {} {}", serverRequest.method(), serverRequest.path());
-        return ok()
-                .body(fromPublisher(partnerMono.flatMap(this.personRepository::save), Person.class));
+        return serverRequest.bodyToMono(Person.class)
+                .doOnNext(this::validate)
+                .flatMap(this.personRepository::save)
+                .flatMap(person -> created(URI.create("/api/people/" + person.getId().toString()))
+                        .bodyValue(person));
     }
+
+    public Mono<ServerResponse> handleUpdate(ServerRequest serverRequest) {
+        log.info("Handle request {} {}", serverRequest.method(), serverRequest.path());
+        var id = Long.parseLong(serverRequest.pathVariable("id"));
+        final Mono<Person> person = serverRequest.bodyToMono(Person.class)
+                .doOnNext(this::validate);
+        return this.personRepository
+                .findById(id)
+                .flatMap(
+                        old ->
+                                ok().contentType(APPLICATION_JSON)
+                                        .body(
+                                                fromPublisher(
+                                                        person
+                                                                .map(p -> new Person(id, p.getName()))
+                                                                .flatMap(this.personRepository::save),
+                                                        Person.class)))
+                .switchIfEmpty(notFound().build());
+    }
+
     private void validate(Person person) {
         log.info("validating person -> {}", person);
         Set<ConstraintViolation<Person>> errors = validator.validate(person);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             List<String> result = errors.stream()
                     .map(this::formatError)
                     .toList();

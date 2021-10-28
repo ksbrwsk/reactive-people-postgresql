@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,11 +114,12 @@ class PersonHandlerTest {
                 .value(msg -> msg.equals("successfully deleted!"));
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource({"N", "Name123456"})
     @DisplayName("should successfully handle request save person")
-    void should_handle_save_person() {
+    void should_handle_save_person(String name) {
 
-        Person person = new Person(1L, "Name");
+        Person person = new Person(1L, name);
         Mono<Person> personMono = Mono.just(person);
 
         when(this.personRepository.save(person))
@@ -126,6 +128,31 @@ class PersonHandlerTest {
         this.webTestClient
                 .post()
                 .uri("/api/people")
+                .bodyValue(person)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody(Person.class)
+                .isEqualTo(person);
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({"N", "Name123456"})
+    @DisplayName("should successfully handle request update person")
+    void should_handle_update_person(String name) {
+
+        Person person = new Person(1L, name);
+        Mono<Person> personMono = Mono.just(person);
+
+        when(this.personRepository.findById(any(Long.class)))
+                .thenReturn(Mono.just(new Person(1L,"Name")));
+        when(this.personRepository.save(person))
+                .thenReturn(personMono);
+
+        this.webTestClient
+                .put()
+                .uri("/api/people/1")
                 .bodyValue(person)
                 .exchange()
                 .expectStatus()
