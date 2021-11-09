@@ -49,13 +49,15 @@ class PersonHandlerTest {
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
-                .expectBodyList(Person.class)
-                .value(people -> {
-                    assertEquals(people.get(0).getId(), 1L);
-                    assertEquals(people.get(0).getName(), "Name");
-                    assertEquals(people.get(1).getId(), 2L);
-                    assertEquals(people.get(1).getName(), "Sabo");
-                });
+                .expectBody()
+                .jsonPath("$[0].id")
+                .isEqualTo("1")
+                .jsonPath("$[0].name")
+                .isEqualTo("Name")
+                .jsonPath("$[1].id")
+                .isEqualTo("2")
+                .jsonPath("$[1].name")
+                .isEqualTo("Sabo");
     }
 
     @Test
@@ -126,7 +128,7 @@ class PersonHandlerTest {
 
         this.webTestClient
                 .post()
-                .uri("/api/people")
+                .uri(BASE)
                 .bodyValue(person)
                 .exchange()
                 .expectStatus()
@@ -151,7 +153,7 @@ class PersonHandlerTest {
 
         this.webTestClient
                 .put()
-                .uri("/api/people/1")
+                .uri(BASE +"/1")
                 .bodyValue(person)
                 .exchange()
                 .expectStatus()
@@ -174,7 +176,7 @@ class PersonHandlerTest {
     void should_handle_person_not_valid(String name) {
         this.webTestClient
                 .post()
-                .uri("/api/people")
+                .uri(BASE)
                 .bodyValue(new Person(name))
                 .exchange()
                 .expectStatus()
