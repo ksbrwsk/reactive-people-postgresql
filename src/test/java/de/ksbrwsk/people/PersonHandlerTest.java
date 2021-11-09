@@ -16,6 +16,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static de.ksbrwsk.people.Constants.BASE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,8 +27,6 @@ import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 @Import({PersonHandler.class, PersonRouter.class})
 @Log4j2
 class PersonHandlerTest {
-
-    private final static String BASE_URL = "/api/people";
 
     @Autowired
     WebTestClient webTestClient;
@@ -46,7 +45,7 @@ class PersonHandlerTest {
 
         this.webTestClient
                 .get()
-                .uri(BASE_URL)
+                .uri(BASE)
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -67,7 +66,7 @@ class PersonHandlerTest {
 
         Person person = this.webTestClient
                 .get()
-                .uri(BASE_URL + "/1")
+                .uri(BASE + "/1")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -87,7 +86,7 @@ class PersonHandlerTest {
 
         this.webTestClient
                 .get()
-                .uri(BASE_URL + "/1000")
+                .uri(BASE + "/1000")
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -104,7 +103,7 @@ class PersonHandlerTest {
 
         this.webTestClient
                 .delete()
-                .uri(BASE_URL + "/1")
+                .uri(BASE + "/1")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -200,7 +199,7 @@ class PersonHandlerTest {
                 .thenReturn(Mono.just(new Person(1L, "First")));
         this.webTestClient
                 .get()
-                .uri(BASE_URL + "/firstByName/First")
+                .uri(BASE + "/firstByName/First")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -215,7 +214,7 @@ class PersonHandlerTest {
                 .thenReturn(Mono.empty());
         this.webTestClient
                 .get()
-                .uri(BASE_URL + "/firstByName/First")
+                .uri(BASE + "/firstByName/First")
                 .exchange()
                 .expectStatus()
                 .isNotFound();

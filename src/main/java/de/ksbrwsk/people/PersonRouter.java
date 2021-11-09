@@ -5,22 +5,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import static de.ksbrwsk.people.Constants.BASE;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
+import static org.springframework.web.reactive.function.server.RouterFunctions.nest;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
 public class PersonRouter {
-
-    private final static String BASE_URL = "/api/people";
-
     @Bean
     RouterFunction<ServerResponse> http(PersonHandler personHandler) {
-        return route()
-                .GET(BASE_URL, personHandler::handleFindAll)
-                .GET(BASE_URL + "/{id}", personHandler::handleFindById)
-                .GET(BASE_URL + "/firstByName/{name}", personHandler::handleFindFirstByName)
-                .DELETE(BASE_URL + "/{id}", personHandler::handleDeleteById)
-                .POST(BASE_URL, personHandler::handleSave)
-                .PUT(BASE_URL + "/{id}", personHandler::handleUpdate)
-                .build();
+        return nest(path(BASE),
+                route(GET(""), personHandler::handleFindAll)
+                        .andRoute(GET("/{id}"), personHandler::handleFindById)
+                        .andRoute(GET("/firstByName/{name}"), personHandler::handleFindFirstByName)
+                        .andRoute(DELETE("/{id}"), personHandler::handleDeleteById)
+                        .andRoute(POST(""), personHandler::handleSave)
+                        .andRoute(PUT("/{id}"), personHandler::handleUpdate)
+        );
     }
 }

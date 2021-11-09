@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @DataR2dbcTest
-class PersonRepositoryTest extends AbstractIntegrationTest {
+class PersonRepositoryTest extends AbstractIntegrationTest{
 
     @Autowired
     PersonRepository personRepository;
