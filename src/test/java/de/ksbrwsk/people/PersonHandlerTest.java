@@ -107,7 +107,7 @@ class PersonHandlerTest {
                 .expectHeader()
                 .contentType(MediaType.APPLICATION_JSON)
                 .expectBody(String.class)
-                .value(msg -> msg.equals("successfully deleted!"));
+                .isEqualTo("successfully deleted!");
     }
 
     @Test
@@ -222,7 +222,7 @@ class PersonHandlerTest {
                 .expectStatus()
                 .is2xxSuccessful()
                 .expectBody(Person.class)
-                .value(person -> person.getName().equalsIgnoreCase("first"));
+                .isEqualTo(new Person(1L, "First"));
     }
 
     @Test

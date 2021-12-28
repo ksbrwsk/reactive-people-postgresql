@@ -1,4 +1,4 @@
- FROM adoptopenjdk:15-jre-hotspot
+FROM eclipse-temurin:17-alpine
 MAINTAINER kai.saborowski@googlemail.com
 
 EXPOSE 8080
