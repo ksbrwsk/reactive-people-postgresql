@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 @WebFluxTest
 @Import({PersonHandler.class, PersonRouter.class})
@@ -42,7 +41,6 @@ class PersonHandlerTest {
                         new Person(1L, "Name"),
                         new Person(2L, "Sabo")
                 ));
-
         this.webTestClient
                 .get()
                 .uri(BASE)
@@ -65,7 +63,6 @@ class PersonHandlerTest {
     void should_handle_find_by_id() {
         when(this.personRepository.findById(1L))
                 .thenReturn(Mono.just(new Person(1L, "Name")));
-
         Person person = this.webTestClient
                 .get()
                 .uri(BASE + "/1")
@@ -85,7 +82,6 @@ class PersonHandlerTest {
     void should_handle_find_by_unknown_id() {
         when(this.personRepository.findById(1000L))
                 .thenReturn(Mono.empty());
-
         this.webTestClient
                 .get()
                 .uri(BASE + "/1000")
@@ -102,7 +98,6 @@ class PersonHandlerTest {
                 .thenReturn(Mono.just(person));
         when(this.personRepository.delete(any(Person.class)))
                 .thenReturn(Mono.empty());
-
         this.webTestClient
                 .delete()
                 .uri(BASE + "/1")
@@ -115,17 +110,27 @@ class PersonHandlerTest {
                 .value(msg -> msg.equals("successfully deleted!"));
     }
 
+    @Test
+    @DisplayName("should handle request delete by unknown id x")
+    void should_handle_delete_by_unknown_id() {
+        when(this.personRepository.findById(1L))
+                .thenReturn(Mono.empty());
+        this.webTestClient
+                .delete()
+                .uri(BASE + "/1")
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
+
     @ParameterizedTest
     @CsvSource({"N", "Name123456"})
-    @DisplayName("should successfully handle request save person")
-    void should_handle_save_person(String name) {
-
+    @DisplayName("should successfully handle request create person")
+    void should_handle_create_person(String name) {
         Person person = new Person(1L, name);
         Mono<Person> personMono = Mono.just(person);
-
         when(this.personRepository.save(person))
                 .thenReturn(personMono);
-
         this.webTestClient
                 .post()
                 .uri(BASE)
@@ -137,23 +142,34 @@ class PersonHandlerTest {
                 .isEqualTo(person);
     }
 
+    @ParameterizedTest
+    @CsvSource({"Name1234567"})
+    @NullAndEmptySource
+    @DisplayName("should successfully handle request create invalid person")
+    void should_handle_create_invalid_person(String name) {
+        this.webTestClient
+                .post()
+                .uri(BASE)
+                .bodyValue(new Person(name))
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
+    }
+
 
     @ParameterizedTest
-    @CsvSource({"N", "Name123456"})
+    @ValueSource(strings = {"Name123456"})
     @DisplayName("should successfully handle request update person")
     void should_handle_update_person(String name) {
-
         Person person = new Person(1L, name);
         Mono<Person> personMono = Mono.just(person);
-
         when(this.personRepository.findById(any(Long.class)))
-                .thenReturn(Mono.just(new Person(1L,"Name")));
+                .thenReturn(Mono.just(new Person(1L, "Name")));
         when(this.personRepository.save(person))
                 .thenReturn(personMono);
-
         this.webTestClient
                 .put()
-                .uri(BASE +"/1")
+                .uri(BASE + "/1")
                 .bodyValue(person)
                 .exchange()
                 .expectStatus()

@@ -3,10 +3,12 @@ package de.ksbrwsk.people;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
@@ -54,6 +56,7 @@ public class PersonHandler {
     public Mono<ServerResponse> handleDeleteById(ServerRequest serverRequest) {
         var id = Long.parseLong(serverRequest.pathVariable("id"));
         return this.personRepository.findById(id)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "person not found")))
                 .flatMap(this.personRepository::delete)
                 .thenReturn(Mono.just("successfully deleted!"))
                 .flatMap(msg -> ok()
@@ -63,6 +66,7 @@ public class PersonHandler {
 
     public Mono<ServerResponse> handleSave(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(Person.class)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "person must not be null")))
                 .doOnNext(this::validate)
                 .flatMap(this.personRepository::save)
                 .flatMap(person ->
