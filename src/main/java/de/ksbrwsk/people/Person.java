@@ -1,12 +1,11 @@
 package de.ksbrwsk.people;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor

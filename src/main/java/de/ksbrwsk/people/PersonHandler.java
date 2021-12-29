@@ -1,5 +1,7 @@
 package de.ksbrwsk.people;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,8 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
@@ -77,7 +77,8 @@ public class PersonHandler {
     public Mono<ServerResponse> handleUpdate(ServerRequest serverRequest) {
         var id = Long.parseLong(serverRequest.pathVariable("id"));
         final Mono<Person> update = serverRequest.bodyToMono(Person.class)
-                .doOnNext(this::validate);
+                .doOnNext(this::validate)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "person must not be null")));
         return this.personRepository.findById(id)
                 .flatMap(old ->
                         ok().body(
