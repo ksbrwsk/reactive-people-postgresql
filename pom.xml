@@ -17,6 +17,7 @@
     <properties>
         <java.version>17</java.version>
         <testcontainers.version>1.16.3</testcontainers.version>
+        <r2dbc-postgresql.version>0.8.11.RELEASE</r2dbc-postgresql.version>
     </properties>
 
     <dependencies>
@@ -42,6 +43,7 @@
             <groupId>io.r2dbc</groupId>
             <artifactId>r2dbc-postgresql</artifactId>
             <scope>runtime</scope>
+            <version>${r2dbc-postgresql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
