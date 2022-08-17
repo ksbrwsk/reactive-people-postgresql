@@ -1,8 +1,8 @@
-CREATE TABLE public.person
+drop table if exists person;
+
+create table person
 (
-    id      BIGSERIAL,
-    name    varchar(255) NULL,
-    vorname varchar(255) NULL,
-    CONSTRAINT person_pkey PRIMARY KEY (id)
+    id      bigserial primary key,
+    name    varchar(255),
+    vorname varchar(255)
 );
-create sequence public.person_seq increment 1 start 1 minvalue 1;
