@@ -6,7 +6,7 @@
 
 **Prerequisites:**
 
-* [Java 17](https://openjdk.net/)
+* [Java 20](https://openjdk.net/)
 * [Apache Maven](https:http://maven.apache.org/)
 * [Docker](https://www.docker.com/)
 * Optional [Postman](https://www.postman.com/)
@@ -55,6 +55,13 @@ Use curl, httpie etc. to call the HTTP Endpoints, or use Postman, a collection f
 reactive-talk-202012.postman_collection.json
 ```
 
+Point your browser to
+```bash
+http://localhost:8080/swagger-ui.html
+```
+to try out the API or see the documentation. 
+
+
 **Themes:**
 
 * Spring Webflux
@@ -63,3 +70,4 @@ reactive-talk-202012.postman_collection.json
 * Unit Testing
 * Integration Testing with Testcontainers
 * Docker build/compose
+* OpenAPI / Swagger API Documentation
