@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>20</java.version>
-        <testcontainers.version>1.18.0</testcontainers.version>
+        <testcontainers.version>1.18.3</testcontainers.version>
         <springdoc-openapi-starter-webflux-ui.version>2.1.0</springdoc-openapi-starter-webflux-ui.version>
     </properties>
 
