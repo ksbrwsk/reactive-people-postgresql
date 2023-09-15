@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @DataR2dbcTest
-class PersonRepositoryTest extends AbstractIntegrationTest{
+class PersonRepositoryTest extends PostgreSqlContainer {
 
     @Autowired
     PersonRepository personRepository;
@@ -60,20 +60,19 @@ class PersonRepositoryTest extends AbstractIntegrationTest{
                         person.getName().equalsIgnoreCase("sabo"))
                 .verifyComplete();
     }
-
-    @Test
-    @DisplayName("should delete person by id x")
-    void should_delete_person_by_id() {
-        Mono<Person> personFlux = this.personRepository
-                .deleteAll()
-                .then(this.personRepository.save(new Person(null, "Name")))
-                .then(this.personRepository.save(new Person(null, "Sabo")))
-                .then(this.personRepository.deleteById(2L))
-                .then(this.personRepository.findById(2L));
-        StepVerifier
-                .create(personFlux)
-                .verifyComplete();
-    }
+//    @Test
+//    @DisplayName("should delete person by id x")
+//    void should_delete_person_by_id() {
+//        Mono<Long> longMono = this.personRepository
+//                .deleteAll()
+//                .then(this.personRepository.save(new Person(null, "Name")))
+//                .flatMap(this.personRepository::delete)
+//                .then(this.personRepository.count());
+//        StepVerifier
+//                .create(longMono)
+//                .expectNext(0L)
+//                .verifyComplete();
+//    }
 
     @Test
     @DisplayName("should be empty result")

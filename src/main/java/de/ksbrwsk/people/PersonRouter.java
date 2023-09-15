@@ -162,9 +162,9 @@ public class PersonRouter {
                             },
                             method = RequestMethod.POST,
                             beanClass = PersonHandler.class,
-                            beanMethod = "handleSave",
+                            beanMethod = "handleCreate",
                             operation = @Operation(
-                                    operationId = "handleSave",
+                                    operationId = "handleCreate",
                                     responses = {
                                             @ApiResponse(
                                                     responseCode = "201",
@@ -190,7 +190,7 @@ public class PersonRouter {
                         .andRoute(GET("/{id}"), personHandler::handleFindById)
                         .andRoute(GET("/firstByName/{name}"), personHandler::handleFindFirstByName)
                         .andRoute(DELETE("/{id}"), personHandler::handleDeleteById)
-                        .andRoute(POST(""), personHandler::handleSave)
+                        .andRoute(POST(""), personHandler::handleCreate)
                         .andRoute(PUT("/{id}"), personHandler::handleUpdate)
         );
     }

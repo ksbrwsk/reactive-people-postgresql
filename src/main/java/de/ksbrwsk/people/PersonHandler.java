@@ -58,13 +58,13 @@ public class PersonHandler {
         return this.personRepository.findById(id)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "person not found")))
                 .flatMap(this.personRepository::delete)
-                .thenReturn(Mono.just("successfully deleted!"))
+                .thenReturn("successfully deleted!")
                 .flatMap(msg -> ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(msg, String.class));
+                        .bodyValue(msg));
     }
 
-    public Mono<ServerResponse> handleSave(ServerRequest serverRequest) {
+    public Mono<ServerResponse> handleCreate(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(Person.class)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "person must not be null")))
                 .doOnNext(this::validate)
@@ -96,7 +96,7 @@ public class PersonHandler {
             List<String> errors = violations.stream()
                     .map(this::formatError)
                     .toList();
-            log.info("person not valid -> {}", errors.toString());
+            log.info("person not valid -> {}", errors);
             throw new ServerWebInputException(errors.toString());
         }
     }

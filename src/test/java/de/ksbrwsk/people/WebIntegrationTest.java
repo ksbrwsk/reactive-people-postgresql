@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -20,9 +19,8 @@ import java.util.Optional;
 import static de.ksbrwsk.people.Constants.BASE;
 
 @Slf4j
-@SpringBootTest
-@AutoConfigureWebTestClient
-public class WebIntegrationTest extends AbstractIntegrationTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class WebIntegrationTest extends PostgreSqlContainer {
 
     @Autowired
     WebTestClient webTestClient;
@@ -61,7 +59,7 @@ public class WebIntegrationTest extends AbstractIntegrationTest {
         var id = first.getId();
         this.webTestClient
                 .put()
-                .uri(BASE+"/"+id)
+                .uri(BASE + "/" + id)
                 .bodyValue(new Person(id, name))
                 .exchange()
                 .expectStatus()
@@ -78,7 +76,7 @@ public class WebIntegrationTest extends AbstractIntegrationTest {
         var id = first.getId();
         this.webTestClient
                 .put()
-                .uri(BASE+"/"+id)
+                .uri(BASE + "/" + id)
                 .bodyValue(new Person(id, name))
                 .exchange()
                 .expectStatus()
@@ -89,7 +87,7 @@ public class WebIntegrationTest extends AbstractIntegrationTest {
     void handleUpdateNotFound() {
         this.webTestClient
                 .put()
-                .uri(BASE+"/10000000")
+                .uri(BASE + "/10000000")
                 .bodyValue(new Person(10000000L, "Update"))
                 .exchange()
                 .expectStatus()
@@ -102,7 +100,7 @@ public class WebIntegrationTest extends AbstractIntegrationTest {
         var id = person.getId();
         this.webTestClient
                 .put()
-                .uri(BASE+"/"+id)
+                .uri(BASE + "/" + id)
                 .bodyValue(Optional.empty())
                 .exchange()
                 .expectStatus()
@@ -186,7 +184,7 @@ public class WebIntegrationTest extends AbstractIntegrationTest {
     void handleNotFound() {
         this.webTestClient
                 .get()
-                .uri("/BASE/peple")
+                .uri("/api/peple")
                 .exchange()
                 .expectStatus()
                 .isNotFound();
