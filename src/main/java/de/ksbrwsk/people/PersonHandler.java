@@ -66,7 +66,7 @@ public class PersonHandler {
 
     public Mono<ServerResponse> handleCreate(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(Person.class)
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "person must not be null")))
+                .switchIfEmpty(Mono.error(new ServerWebInputException("person must not be null")))
                 .doOnNext(this::validate)
                 .flatMap(this.personRepository::save)
                 .flatMap(person ->
@@ -78,7 +78,7 @@ public class PersonHandler {
         var id = Long.parseLong(serverRequest.pathVariable("id"));
         final Mono<Person> update = serverRequest.bodyToMono(Person.class)
                 .doOnNext(this::validate)
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "person must not be null")));
+                .switchIfEmpty(Mono.error(new ServerWebInputException("person must not be null")));
         return this.personRepository.findById(id)
                 .flatMap(old ->
                         ok().body(

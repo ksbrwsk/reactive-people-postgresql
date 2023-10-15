@@ -1,5 +1,4 @@
 drop table if exists person;
-
 create table person
 (
     id      bigserial primary key,

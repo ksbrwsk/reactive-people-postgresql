@@ -14,6 +14,13 @@ class PersonRepositoryTest extends PostgreSqlContainer {
     @Autowired
     PersonRepository personRepository;
 
+    private Person findFirst() {
+        var first = this.personRepository
+                .findTopByOrderByIdAsc()
+                .block();
+        return first;
+    }
+
     @Test
     @DisplayName("should persist people")
     void should_persist_people() {
@@ -60,19 +67,24 @@ class PersonRepositoryTest extends PostgreSqlContainer {
                         person.getName().equalsIgnoreCase("sabo"))
                 .verifyComplete();
     }
-//    @Test
-//    @DisplayName("should delete person by id x")
-//    void should_delete_person_by_id() {
-//        Mono<Long> longMono = this.personRepository
-//                .deleteAll()
-//                .then(this.personRepository.save(new Person(null, "Name")))
-//                .flatMap(this.personRepository::delete)
-//                .then(this.personRepository.count());
-//        StepVerifier
-//                .create(longMono)
-//                .expectNext(0L)
-//                .verifyComplete();
-//    }
+
+    @Test
+    @DisplayName("should delete person by id x")
+    void should_delete_person_by_id() {
+        this.personRepository
+                .deleteAll()
+                .then(this.personRepository.save(new Person(null, "Name")))
+                .block();
+        Person first = this.findFirst();
+        Mono<Long> longMono = this.personRepository
+                .findById(first.getId())
+                .flatMap(this.personRepository::delete)
+                .then(this.personRepository.count());
+        StepVerifier
+                .create(longMono)
+                .expectNext(0L)
+                .verifyComplete();
+    }
 
     @Test
     @DisplayName("should be empty result")
