@@ -20,7 +20,7 @@ import static de.ksbrwsk.people.Constants.BASE;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class WebIntegrationTest {//extends PostgreSqlContainer {
+public class WebIntegrationTest extends PostgreSqlContainer {
 
     @Autowired
     WebTestClient webTestClient;
