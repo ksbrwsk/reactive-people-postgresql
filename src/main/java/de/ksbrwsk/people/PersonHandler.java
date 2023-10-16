@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
-import static de.ksbrwsk.people.Constants.BASE;
+import static de.ksbrwsk.people.Constants.API;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.ServerResponse.*;
@@ -70,7 +70,7 @@ public class PersonHandler {
                 .doOnNext(this::validate)
                 .flatMap(this.personRepository::save)
                 .flatMap(person ->
-                        created(URI.create(BASE + "/" + person.getId()))
+                        created(URI.create(API + "/" + person.getId()))
                                 .bodyValue(person));
     }
 

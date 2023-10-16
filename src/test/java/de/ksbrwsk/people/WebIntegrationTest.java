@@ -16,7 +16,7 @@ import reactor.test.StepVerifier;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static de.ksbrwsk.people.Constants.BASE;
+import static de.ksbrwsk.people.Constants.API;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -59,7 +59,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
         var id = first.getId();
         this.webTestClient
                 .put()
-                .uri(BASE + "/" + id)
+                .uri(API + "/" + id)
                 .bodyValue(new Person(id, name))
                 .exchange()
                 .expectStatus()
@@ -76,7 +76,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
         var id = first.getId();
         this.webTestClient
                 .put()
-                .uri(BASE + "/" + id)
+                .uri(API + "/" + id)
                 .bodyValue(new Person(id, name))
                 .exchange()
                 .expectStatus()
@@ -87,7 +87,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     void handleUpdateNotFound() {
         this.webTestClient
                 .put()
-                .uri(BASE + "/10000000")
+                .uri(API + "/10000000")
                 .bodyValue(new Person(10000000L, "Update"))
                 .exchange()
                 .expectStatus()
@@ -100,7 +100,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
         var id = person.getId();
         this.webTestClient
                 .put()
-                .uri(BASE + "/" + id)
+                .uri(API + "/" + id)
                 .bodyValue(Optional.empty())
                 .exchange()
                 .expectStatus()
@@ -111,7 +111,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     void handleCreate() {
         this.webTestClient
                 .post()
-                .uri(BASE)
+                .uri(API)
                 .bodyValue(new Person("Name"))
                 .exchange()
                 .expectStatus()
@@ -127,7 +127,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     void handleCreateValid(String name) {
         this.webTestClient
                 .post()
-                .uri(BASE)
+                .uri(API)
                 .bodyValue(new Person(name))
                 .exchange()
                 .expectStatus()
@@ -144,7 +144,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     void handleCreateInvalid(String name) {
         this.webTestClient
                 .post()
-                .uri(BASE)
+                .uri(API)
                 .bodyValue(new Person(name))
                 .exchange()
                 .expectStatus()
@@ -157,7 +157,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
         var id = first.getId();
         this.webTestClient
                 .delete()
-                .uri(BASE + "/" + id)
+                .uri(API + "/" + id)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -171,7 +171,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     void handleFindAll() {
         this.webTestClient
                 .get()
-                .uri(BASE)
+                .uri(API)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -196,7 +196,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
         var id = first.getId();
         this.webTestClient
                 .get()
-                .uri(BASE + "/" + id)
+                .uri(API + "/" + id)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -209,7 +209,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     void handleFindByIdNotFound() {
         this.webTestClient
                 .get()
-                .uri(BASE + "/10000000000")
+                .uri(API + "/10000000000")
                 .exchange()
                 .expectStatus()
                 .isNotFound();

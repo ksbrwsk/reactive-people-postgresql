@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static de.ksbrwsk.people.Constants.BASE;
+import static de.ksbrwsk.people.Constants.API;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.nest;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -28,7 +28,7 @@ public class PersonRouter {
     @RouterOperations(
             {
                     @RouterOperation(
-                            path = BASE,
+                            path = API,
                             produces = {
                                     MediaType.APPLICATION_JSON_VALUE
                             },
@@ -45,13 +45,13 @@ public class PersonRouter {
                                                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                                                             array = @ArraySchema(
                                                                     schema = @Schema(implementation = Person.class))
-                                                            )
+                                                    )
                                             )
                                     }
                             )
                     ),
                     @RouterOperation(
-                            path = BASE + "/{id}",
+                            path = API + "/{id}",
                             produces = {
                                     MediaType.APPLICATION_JSON_VALUE
                             },
@@ -76,7 +76,7 @@ public class PersonRouter {
                             )
                     ),
                     @RouterOperation(
-                            path = BASE + "/firstByName/{name}",
+                            path = API + "/firstByName/{name}",
                             produces = {
                                     MediaType.APPLICATION_JSON_VALUE
                             },
@@ -101,7 +101,7 @@ public class PersonRouter {
                             )
                     ),
                     @RouterOperation(
-                            path = BASE + "/{id}",
+                            path = API + "/{id}",
                             produces = {
                                     MediaType.APPLICATION_JSON_VALUE
                             },
@@ -126,7 +126,7 @@ public class PersonRouter {
                             )
                     ),
                     @RouterOperation(
-                            path = BASE + "/{id}",
+                            path = API + "/{id}",
                             produces = {
                                     MediaType.APPLICATION_JSON_VALUE
                             },
@@ -157,7 +157,7 @@ public class PersonRouter {
                             )
                     ),
                     @RouterOperation(
-                            path = BASE,
+                            path = API,
                             produces = {
                                     MediaType.APPLICATION_JSON_VALUE
                             },
@@ -186,7 +186,7 @@ public class PersonRouter {
             }
     )
     RouterFunction<ServerResponse> http(PersonHandler personHandler) {
-        return nest(path(BASE),
+        return nest(path(API),
                 route(GET(""), personHandler::handleFindAll)
                         .andRoute(GET("/{id}"), personHandler::handleFindById)
                         .andRoute(GET("/firstByName/{name}"), personHandler::handleFindFirstByName)

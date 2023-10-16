@@ -16,7 +16,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static de.ksbrwsk.people.Constants.BASE;
+import static de.ksbrwsk.people.Constants.API;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +43,7 @@ class PersonHandlerTest {
                 ));
         this.webTestClient
                 .get()
-                .uri(BASE)
+                .uri(API)
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -65,7 +65,7 @@ class PersonHandlerTest {
                 .thenReturn(Mono.just(new Person(1L, "Name")));
         Person person = this.webTestClient
                 .get()
-                .uri(BASE + "/1")
+                .uri(API + "/1")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -84,7 +84,7 @@ class PersonHandlerTest {
                 .thenReturn(Mono.empty());
         this.webTestClient
                 .get()
-                .uri(BASE + "/1000")
+                .uri(API + "/1000")
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -100,7 +100,7 @@ class PersonHandlerTest {
                 .thenReturn(Mono.empty());
         this.webTestClient
                 .delete()
-                .uri(BASE + "/1")
+                .uri(API + "/1")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -117,7 +117,7 @@ class PersonHandlerTest {
                 .thenReturn(Mono.empty());
         this.webTestClient
                 .delete()
-                .uri(BASE + "/1")
+                .uri(API + "/1")
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -133,7 +133,7 @@ class PersonHandlerTest {
                 .thenReturn(personMono);
         this.webTestClient
                 .post()
-                .uri(BASE)
+                .uri(API)
                 .bodyValue(person)
                 .exchange()
                 .expectStatus()
@@ -149,7 +149,7 @@ class PersonHandlerTest {
     void should_handle_create_invalid_person(String name) {
         this.webTestClient
                 .post()
-                .uri(BASE)
+                .uri(API)
                 .bodyValue(new Person(name))
                 .exchange()
                 .expectStatus()
@@ -169,7 +169,7 @@ class PersonHandlerTest {
                 .thenReturn(personMono);
         this.webTestClient
                 .put()
-                .uri(BASE + "/1")
+                .uri(API + "/1")
                 .bodyValue(person)
                 .exchange()
                 .expectStatus()
@@ -192,7 +192,7 @@ class PersonHandlerTest {
     void should_handle_person_not_valid(String name) {
         this.webTestClient
                 .post()
-                .uri(BASE)
+                .uri(API)
                 .bodyValue(new Person(name))
                 .exchange()
                 .expectStatus()
@@ -217,7 +217,7 @@ class PersonHandlerTest {
                 .thenReturn(Mono.just(new Person(1L, "First")));
         this.webTestClient
                 .get()
-                .uri(BASE + "/firstByName/First")
+                .uri(API + "/firstByName/First")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -232,7 +232,7 @@ class PersonHandlerTest {
                 .thenReturn(Mono.empty());
         this.webTestClient
                 .get()
-                .uri(BASE + "/firstByName/First")
+                .uri(API + "/firstByName/First")
                 .exchange()
                 .expectStatus()
                 .isNotFound();

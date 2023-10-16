@@ -11,6 +11,17 @@
 * [Docker](https://www.docker.com/)
 * Optional [Postman](https://www.postman.com/)
 
+**Themes:**
+
+* Spring Webflux
+* Router Functions/Handler Functions
+* R2DBC Database Connectivity
+* Unit Testing
+* Integration Testing with Testcontainers
+* Docker build/compose
+* OpenAPI / Swagger API Documentation
+* Spring RestDocs documentation
+
 If you have Docker installed, grab a PostgreSQL image from Docker Hub and run the image.
 ```bash
 docker pull postgres:15.4-alpine
@@ -56,13 +67,8 @@ http://localhost:8080/swagger-ui.html
 ```
 to try out the API or see the documentation. 
 
-
-**Themes:**
-
-* Spring Webflux
-* Router Functions/Handler Functions
-* R2DBC Database Connectivity
-* Unit Testing
-* Integration Testing with Testcontainers
-* Docker build/compose
-* OpenAPI / Swagger API Documentation
+Point your browser to
+```bash
+http://localhost:8080/docs/index.html
+```
+to read the RestDOCs API documentation. 

@@ -1,0 +1,178 @@
+= Reactive People Postgresql API Guide
+Spring Boot Webflux / R2dbc example;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[overview]]
+= Overview
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+Example tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP verbs.
+
+|===
+| Verb | Usage
+
+| `GET`
+| Used to retrieve a resource
+
+| `POST`
+| Used to create a new resource
+
+| `PUT`
+| Used to update an existing resource
+
+| `DELETE`
+| Used to delete an existing resource
+|===
+
+Example tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP status codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `201 Created`
+| A new resource has been created successfully. The resource's URI is available from the response's
+`Location` header
+
+| `204 No Content`
+| An update to an existing resource has been applied successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `404 Not Found`
+| The requested resource did not exist
+|===
+
+[[overview-resource-not-found]]
+== Resource not found
+=== Request
+
+include::{snippets}/not-found/curl-request.adoc[]
+include::{snippets}/not-found/httpie-request.adoc[]
+include::{snippets}/not-found/http-request.adoc[]
+
+=== Response
+include::{snippets}/not-found/http-response.adoc[]
+
+[[overview-handle-find-all]]
+== GET /api/people
+=== Request
+include::{snippets}/handle-find-all/curl-request.adoc[]
+include::{snippets}/handle-find-all/httpie-request.adoc[]
+include::{snippets}/handle-find-all/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-find-all/http-response.adoc[]
+include::{snippets}/handle-find-all/response-fields.adoc[]
+
+[[overview-handle-find-by-id]]
+== GET /api/people/ID
+=== Request
+include::{snippets}/handle-find-by-id/curl-request.adoc[]
+include::{snippets}/handle-find-by-id/httpie-request.adoc[]
+include::{snippets}/handle-find-by-id/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-find-by-id/http-response.adoc[]
+include::{snippets}/handle-find-by-id/response-fields.adoc[]
+
+[[overview-handle-find-by-id-not-found]]
+== GET /api/people/ID not found
+=== Request
+include::{snippets}/handle-find-by-id-not-found/curl-request.adoc[]
+include::{snippets}/handle-find-by-id-not-found/httpie-request.adoc[]
+include::{snippets}/handle-find-by-id-not-found/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-find-by-id-not-found/http-response.adoc[]
+
+[[overview-handle-delete-by-id]]
+== DELETE /api/people/ID
+=== Request
+include::{snippets}/handle-delete-by-id/curl-request.adoc[]
+include::{snippets}/handle-delete-by-id/httpie-request.adoc[]
+include::{snippets}/handle-delete-by-id/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-delete-by-id/http-response.adoc[]
+
+[[overview-delete-find-by-id-not-found]]
+== DELETE /api/people/ID not found
+=== Request
+include::{snippets}/handle-delete-by-id-not-found/curl-request.adoc[]
+include::{snippets}/handle-delete-by-id-not-found/httpie-request.adoc[]
+include::{snippets}/handle-delete-by-id-not-found/http-request.adoc[]
+
+[[overview-handle-update]]
+== PUT /api/people/ID
+=== Request
+include::{snippets}/handle-update/curl-request.adoc[]
+include::{snippets}/handle-update/httpie-request.adoc[]
+include::{snippets}/handle-update/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-update/http-response.adoc[]
+include::{snippets}/handle-update/response-fields.adoc[]
+
+[[overview-handle-update-not-found]]
+== PUT /api/people/ID not found
+=== Request
+include::{snippets}/handle-update-not-found/curl-request.adoc[]
+include::{snippets}/handle-update-not-found/httpie-request.adoc[]
+include::{snippets}/handle-update-not-found/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-update-not-found/http-response.adoc[]
+
+[[overview-handle-update-invalid]]
+== PUT /api/people/ID bad request invalid
+=== Request
+include::{snippets}/handle-update-invalid/curl-request.adoc[]
+include::{snippets}/handle-update-invalid/httpie-request.adoc[]
+include::{snippets}/handle-update-invalid/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-update-invalid/http-response.adoc[]
+
+[[overview-handle-create]]
+== POST /api/people
+=== Request
+include::{snippets}/handle-create/curl-request.adoc[]
+include::{snippets}/handle-create/httpie-request.adoc[]
+include::{snippets}/handle-create/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-create/http-response.adoc[]
+include::{snippets}/handle-create/response-fields.adoc[]
+
+[[overview-handle-create-invalid]]
+== POST /api/people bad request invalid
+=== Request
+include::{snippets}/handle-create-invalid/curl-request.adoc[]
+include::{snippets}/handle-create-invalid/httpie-request.adoc[]
+include::{snippets}/handle-create-invalid/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-create-invalid/http-response.adoc[]
+
+[[overview-handle-create-bad-request]]
+== POST /api/people bad request
+=== Request
+include::{snippets}/handle-create-bad-request/curl-request.adoc[]
+include::{snippets}/handle-create-bad-request/httpie-request.adoc[]
+include::{snippets}/handle-create-bad-request/http-request.adoc[]
+
+=== Response
+include::{snippets}/handle-create-bad-request/http-response.adoc[]
