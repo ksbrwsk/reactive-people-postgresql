@@ -1,6 +1,6 @@
-# reactive-talk-202012
+# reactive-people-postgresql
 
-#### Demo code for my Reactive Spring Talk 12/2020.
+#### reactive Spring Boot example, covering Webflux, R2dbc, Testcontainers, Open API, RestDocs.
 
 ![Java CI with Maven](https://github.com/ksbrwsk/reactive-talk-202012/workflows/Java%20CI%20with%20Maven/badge.svg)
 
