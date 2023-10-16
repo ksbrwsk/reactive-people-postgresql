@@ -2,7 +2,7 @@
 
 #### reactive Spring Boot example, covering Webflux, R2dbc, Testcontainers, Open API, RestDocs.
 
-![Java CI with Maven](https://github.com/ksbrwsk/reactive-talk-202012/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Java CI with Maven](https://github.com/ksbrwsk/reactive-people-postgresql/workflows/Java%20CI%20with%20Maven/badge.svg)
 
 **Prerequisites:**
 
@@ -29,13 +29,13 @@ docker run --name postgresql -e POSTGRESQL_PASSWORD=password123 -e POSTGRES_DB=s
 ```
 Or else, grab the app image via 
 ```bash
-docker pull ksabrwsk/reactive-talk-202012:1.0.0
+docker pull ksabrwsk/reactive-people-postgresql:1.0.0
 ```
 
 Application properties can be configured in
 
 ```bash
-reactive-talk-202012/src/main/resources/application.properties
+reactive-people-postgresql/src/main/resources/application.properties
 ```
 
 #### How to build and run
@@ -52,13 +52,13 @@ to build and run the application on your local environment.
 To run the app as a Docker Container type the following commands to build
 an run the image:
 ```bash
-docker build ./ -t reactive-talk-202012
+docker build ./ -t reactive-people-postgresql
 docker-compose up --force-recreate
 ```
 
 Use curl, httpie etc. to call the HTTP Endpoints, or use Postman, a collection file is located under
 ```bash
-reactive-talk-202012.postman_collection.json
+reactive-people-postgresql.postman_collection.json
 ```
 
 Point your browser to
