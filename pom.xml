@@ -10,7 +10,7 @@
     </parent>
     <groupId>de.ksbrwsk</groupId>
     <artifactId>reactive-people-postgresql</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3-SNAPSHOT</version>
     <name>reactive-people-postgresql</name>
     <description>Reactive example Webflux, R2DBC, Testcontainers</description>
 
