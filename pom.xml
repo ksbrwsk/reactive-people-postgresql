@@ -5,19 +5,22 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.1.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>de.ksbrwsk</groupId>
-    <artifactId>reactive-talk-202012</artifactId>
-    <version>1.1.0</version>
-    <name>reactive-talk-202012</name>
+    <artifactId>reactive-people-postgresql</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>reactive-people-postgresql</name>
     <description>Reactive example Webflux, R2DBC, Testcontainers</description>
 
     <properties>
         <java.version>21</java.version>
         <springdoc-openapi-starter-webflux-ui.version>2.2.0</springdoc-openapi-starter-webflux-ui.version>
     </properties>
+    <scm>
+        <developerConnection>scm:git:https://github.com/ksbrwsk/reactive-people-postgresql.git</developerConnection>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -105,6 +108,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <configuration>
+                    <offline>true</offline>
+                    <skipPoms>false</skipPoms>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -196,5 +207,11 @@
             </plugin>
         </plugins>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/ksbrwsk/reactive-people-postgresql</url>
+        </repository>
+    </distributionManagement>
 </project>
