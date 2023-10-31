@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -22,12 +23,13 @@ import java.util.Optional;
 import static de.ksbrwsk.people.Constants.API;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.document;
 import static org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.documentationConfiguration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(TestReactivePeoplePostgresqlApplication.class)
-public class RestAssuredDocsTest extends PostgreSqlContainer {
+public class RestDocsTest extends PostgreSqlContainer {
 
     @Autowired
     PersonRepository personRepository;
@@ -62,6 +64,11 @@ public class RestAssuredDocsTest extends PostgreSqlContainer {
                 .verifyComplete();
     }
 
+    public List<String> constraintDescriptionForProperty(String property) {
+        ConstraintDescriptions userConstraints = new ConstraintDescriptions(Person.class);
+        return userConstraints.descriptionsForProperty(property);
+    }
+
     @Test
     void handleNotFound() {
         this.webTestClient
@@ -92,10 +99,12 @@ public class RestAssuredDocsTest extends PostgreSqlContainer {
                         responseFields(
                                 fieldWithPath("[].id")
                                         .type(JsonFieldType.NUMBER)
-                                        .description("The person's id"),
+                                        .description("The person's id")
+                                        .attributes(key("constraints").value(constraintDescriptionForProperty("id"))),
                                 fieldWithPath("[].name")
                                         .type(JsonFieldType.STRING)
-                                        .description("The person's name"))));
+                                        .description("The person's name")
+                                        .attributes(key("constraints").value(constraintDescriptionForProperty("name"))))));
     }
 
     @Test
@@ -114,10 +123,12 @@ public class RestAssuredDocsTest extends PostgreSqlContainer {
                         responseFields(
                                 fieldWithPath("id")
                                         .type(JsonFieldType.NUMBER)
-                                        .description("The person's id"),
+                                        .description("The person's id")
+                                        .attributes(key("constraints").value(constraintDescriptionForProperty("id"))),
                                 fieldWithPath("name")
                                         .type(JsonFieldType.STRING)
-                                        .description("The person's name"))));
+                                        .description("The person's name")
+                                        .attributes(key("constraints").value(constraintDescriptionForProperty("name"))))));
     }
 
     @Test
@@ -177,10 +188,12 @@ public class RestAssuredDocsTest extends PostgreSqlContainer {
                         responseFields(
                                 fieldWithPath("id")
                                         .type(JsonFieldType.NUMBER)
-                                        .description("The person's id"),
+                                        .description("The person's id")
+                                        .attributes(key("constraints").value(constraintDescriptionForProperty("id"))),
                                 fieldWithPath("name")
                                         .type(JsonFieldType.STRING)
-                                        .description("The person's name"))));
+                                        .description("The person's name")
+                                        .attributes(key("constraints").value(constraintDescriptionForProperty("name"))))));
     }
 
     @Test
@@ -240,10 +253,12 @@ public class RestAssuredDocsTest extends PostgreSqlContainer {
                         responseFields(
                                 fieldWithPath("id")
                                         .type(JsonFieldType.NUMBER)
-                                        .description("The person's id"),
+                                        .description("The person's id")
+                                        .attributes(key("constraints").value(constraintDescriptionForProperty("id"))),
                                 fieldWithPath("name")
                                         .type(JsonFieldType.STRING)
-                                        .description("The person's name"))));
+                                        .description("The person's name")
+                                        .attributes(key("constraints").value(constraintDescriptionForProperty("name"))))));
     }
 
     @Test
