@@ -1,4 +1,4 @@
-name: Publish package to GitHub Packages
+name: Release
 on:
   push:
     tags:
@@ -17,16 +17,17 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
-      - name: Setup Java 21
+      - name: Setup Java JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '21'
-          cache: 'maven'
+          java-version: 21
+          server-id: github
       - name: Configure Git user
         run: |
           git config user.email "kai.saborowski@googlemail.com"
           git config user.name "Kai Saborowski"
+          chmod +x mvnw
       - name: Publish JAR
         run: ./mvnw -B release:prepare release:perform
         env:
