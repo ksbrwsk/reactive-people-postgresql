@@ -7,11 +7,9 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource(properties = {"spring.autoconfigure.exclude=" +
@@ -23,18 +21,25 @@ class PersonTest {
     @Test
     void should_create_person() {
         Person person = new Person(1L, "Name");
-        assertEquals(person.getId(), 1L);
-        assertEquals(person.getName(), "Name");
+        assertThat(person.getId()).isEqualTo(1L);
+        assertThat(person.getName()).isEqualTo("Name");
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"N", "Name", "0123456789"})
+    void should_create_valid_person(String name) {
+        Person person = new Person(name);
+        var violations = this.validator.validate(person);
+        assertThat(violations).isEmpty();
+    }
 
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"01234567890"})
-    void notValid(String name) {
+    void should_create_invalid_person(String name) {
         Person person = new Person(name);
         var violations = this.validator.validate(person);
-        assertFalse(violations.isEmpty());
+        assertThat(violations).isNotEmpty();
         violations.forEach(System.out::println);
     }
 }

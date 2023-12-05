@@ -22,8 +22,19 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.nest;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+/**
+ * This class is responsible for routing HTTP requests to the appropriate handler methods.
+ * It uses Spring's functional routing style with RouterFunctions and RequestPredicates.
+ */
 @Configuration
 public class PersonRouter {
+    /**
+     * This method defines the routes for the Person API.
+     * It uses the @RouterOperations annotation to provide OpenAPI documentation for each route.
+     *
+     * @param personHandler The handler class that contains the methods to handle the requests.
+     * @return A RouterFunction that routes requests to the appropriate handler methods.
+     */
     @Bean
     @RouterOperations(
             {
