@@ -17,8 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static de.ksbrwsk.people.Constants.API;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -46,16 +45,12 @@ class PersonHandlerTest {
                 .uri(API)
                 .exchange()
                 .expectStatus()
-                .is2xxSuccessful()
-                .expectBody()
-                .jsonPath("$[0].id")
-                .isEqualTo("1")
-                .jsonPath("$[0].name")
-                .isEqualTo("Name")
-                .jsonPath("$[1].id")
-                .isEqualTo("2")
-                .jsonPath("$[1].name")
-                .isEqualTo("Sabo");
+                .isOk()
+                .expectBodyList(Person.class)
+                .hasSize(2)
+                .contains(
+                        new Person(1L, "Name"),
+                        new Person(2L, "Sabo"));
     }
 
     @Test
@@ -63,18 +58,18 @@ class PersonHandlerTest {
     void should_handle_find_by_id() {
         when(this.personRepository.findById(1L))
                 .thenReturn(Mono.just(new Person(1L, "Name")));
-        Person person = this.webTestClient
+        this.webTestClient
                 .get()
                 .uri(API + "/1")
                 .exchange()
                 .expectStatus()
-                .is2xxSuccessful()
+                .isOk()
                 .expectBody(Person.class)
-                .returnResult()
-                .getResponseBody();
-        assertNotNull(person);
-        assertEquals(person.getName(), "Name");
-        assertEquals(person.getId(), 1L);
+                .consumeWith(response -> {
+                    assertThat(response.getResponseBody()).isNotNull();
+                    assertThat(response.getResponseBody().getName()).isEqualTo("Name");
+                    assertThat(response.getResponseBody().getId()).isEqualTo(1L);
+                });
     }
 
     @Test
@@ -173,7 +168,7 @@ class PersonHandlerTest {
                 .bodyValue(person)
                 .exchange()
                 .expectStatus()
-                .is2xxSuccessful()
+                .isOk()
                 .expectBody(Person.class)
                 .isEqualTo(person);
     }
@@ -207,7 +202,7 @@ class PersonHandlerTest {
                 .uri("/api/peple")
                 .exchange()
                 .expectStatus()
-                .is4xxClientError();
+                .isNotFound();
     }
 
     @Test
@@ -220,7 +215,7 @@ class PersonHandlerTest {
                 .uri(API + "/firstByName/First")
                 .exchange()
                 .expectStatus()
-                .is2xxSuccessful()
+                .isOk()
                 .expectBody(Person.class)
                 .isEqualTo(new Person(1L, "First"));
     }

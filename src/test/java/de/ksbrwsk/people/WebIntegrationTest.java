@@ -176,8 +176,11 @@ public class WebIntegrationTest extends PostgreSqlContainer {
                 .expectStatus()
                 .isOk()
                 .expectBody()
-                .jsonPath("$.[0].name").isEqualTo("Person@1")
-                .jsonPath("$.[1].name").isEqualTo("Person@2");
+                .jsonPath("$").isArray()
+                .jsonPath("$[0].id").exists()
+                .jsonPath("$[0].name").isEqualTo("Person@1")
+                .jsonPath("$[1].id").exists()
+                .jsonPath("$[1].name").isEqualTo("Person@2");
     }
 
     @Test

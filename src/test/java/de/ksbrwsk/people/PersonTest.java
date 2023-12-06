@@ -7,13 +7,10 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@TestPropertySource(properties = {"spring.autoconfigure.exclude=" +
-        "org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration"})
 class PersonTest {
     @Autowired
     Validator validator;
