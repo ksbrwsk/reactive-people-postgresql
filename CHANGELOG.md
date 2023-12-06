@@ -1,3 +1,4 @@
+# Changelog
 ## Release v1.1.1 - 2023-10-28
 
 Release v1.1.1
