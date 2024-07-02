@@ -15,7 +15,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <springdoc-openapi-starter-webflux-ui.version>2.5.0</springdoc-openapi-starter-webflux-ui.version>
+        <springdoc-openapi-starter-webflux-ui.version>2.6.0</springdoc-openapi-starter-webflux-ui.version>
     </properties>
     <scm>
         <developerConnection>scm:git:https://github.com/ksbrwsk/reactive-people-postgresql.git</developerConnection>
