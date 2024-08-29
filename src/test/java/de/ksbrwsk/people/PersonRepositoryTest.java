@@ -31,10 +31,10 @@ class PersonRepositoryTest extends PostgreSqlContainer {
                 .thenMany(this.personRepository.findAll());
         StepVerifier
                 .create(personFlux)
-                .expectNextMatches(person -> person.getId() != null &&
-                        person.getName().equalsIgnoreCase("name"))
-                .expectNextMatches(person -> person.getId() != null &&
-                        person.getName().equalsIgnoreCase("sabo"))
+                .expectNextMatches(person -> person.id() != null &&
+                        person.name().equalsIgnoreCase("name"))
+                .expectNextMatches(person -> person.id() != null &&
+                        person.name().equalsIgnoreCase("sabo"))
                 .verifyComplete();
     }
 
@@ -46,10 +46,10 @@ class PersonRepositoryTest extends PostgreSqlContainer {
                 .then(this.personRepository.save(new Person(null, "Name")))
                 .then(this.personRepository.save(new Person(null, "Sabo")))
                 .then(this.personRepository.findFirstByName("Sabo"))
-                .flatMap(person -> this.personRepository.findById(person.getId()));
+                .flatMap(person -> this.personRepository.findById(person.id()));
         StepVerifier
                 .create(personFlux)
-                .expectNextMatches(person -> person.getName().equalsIgnoreCase("sabo"))
+                .expectNextMatches(person -> person.name().equalsIgnoreCase("sabo"))
                 .verifyComplete();
     }
 
@@ -63,8 +63,8 @@ class PersonRepositoryTest extends PostgreSqlContainer {
                 .then(this.personRepository.findFirstByName("Sabo"));
         StepVerifier
                 .create(personFlux)
-                .expectNextMatches(person -> person.getId() != null &&
-                        person.getName().equalsIgnoreCase("sabo"))
+                .expectNextMatches(person -> person.id() != null &&
+                        person.name().equalsIgnoreCase("sabo"))
                 .verifyComplete();
     }
 
@@ -77,7 +77,7 @@ class PersonRepositoryTest extends PostgreSqlContainer {
                 .block();
         Person first = this.findFirst();
         Mono<Long> longMono = this.personRepository
-                .findById(first.getId())
+                .findById(first.id())
                 .flatMap(this.personRepository::delete)
                 .then(this.personRepository.count());
         StepVerifier

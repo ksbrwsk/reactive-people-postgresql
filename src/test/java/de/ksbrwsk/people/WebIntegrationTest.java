@@ -31,7 +31,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     @BeforeEach
     public void setUp() {
         log.info("Running setUp -> creatíng 100 people");
-        ArrayList<Person> people = new ArrayList<>();
+        var people = new ArrayList<Person>();
         for (int i = 1; i <= 100; i++) {
             people.add(new Person("Person@" + i));
         }
@@ -56,7 +56,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     @ValueSource(strings = {"N", "Name", "0123456789"})
     void handleUpdateValid(String name) {
         Person first = this.fetchFirstPerson();
-        var id = first.getId();
+        var id = first.id();
         this.webTestClient
                 .put()
                 .uri(API + "/" + id)
@@ -73,7 +73,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     @NullAndEmptySource
     void handleUpdateInvalid(String name) {
         Person first = this.fetchFirstPerson();
-        var id = first.getId();
+        var id = first.id();
         this.webTestClient
                 .put()
                 .uri(API + "/" + id)
@@ -97,7 +97,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     @Test
     void handleUpdateBadRequest() {
         Person person = fetchFirstPerson();
-        var id = person.getId();
+        var id = person.id();
         this.webTestClient
                 .put()
                 .uri(API + "/" + id)
@@ -154,7 +154,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     @Test
     void handleDeleteById() {
         Person first = this.fetchFirstPerson();
-        var id = first.getId();
+        var id = first.id();
         this.webTestClient
                 .delete()
                 .uri(API + "/" + id)
@@ -196,7 +196,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
     @Test
     void handleFindById() {
         Person first = this.fetchFirstPerson();
-        var id = first.getId();
+        var id = first.id();
         this.webTestClient
                 .get()
                 .uri(API + "/" + id)
@@ -205,7 +205,7 @@ public class WebIntegrationTest extends PostgreSqlContainer {
                 .isOk()
                 .expectBody()
                 .jsonPath("$.id").isEqualTo(id.toString())
-                .jsonPath("$.name").isEqualTo(first.getName());
+                .jsonPath("$.name").isEqualTo(first.name());
     }
 
     @Test

@@ -67,8 +67,8 @@ class PersonHandlerTest {
                 .expectBody(Person.class)
                 .consumeWith(response -> {
                     assertThat(response.getResponseBody()).isNotNull();
-                    assertThat(response.getResponseBody().getName()).isEqualTo("Name");
-                    assertThat(response.getResponseBody().getId()).isEqualTo(1L);
+                    assertThat(response.getResponseBody().name()).isEqualTo("Name");
+                    assertThat(response.getResponseBody().id()).isEqualTo(1L);
                 });
     }
 

@@ -18,8 +18,8 @@ class PersonTest {
     @Test
     void should_create_person() {
         Person person = new Person(1L, "Name");
-        assertThat(person.getId()).isEqualTo(1L);
-        assertThat(person.getName()).isEqualTo("Name");
+        assertThat(person.id()).isEqualTo(1L);
+        assertThat(person.name()).isEqualTo("Name");
     }
 
     @ParameterizedTest

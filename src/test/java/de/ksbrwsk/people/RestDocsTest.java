@@ -50,7 +50,6 @@ public class RestDocsTest extends PostgreSqlContainer {
         this.webTestClient = WebTestClient.bindToApplicationContext(applicationContext).configureClient()
                 .filter(documentationConfiguration(restDocumentation))
                 .build();
-
         List<Person> people = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             people.add(new Person("Person@" + i));
@@ -112,13 +111,13 @@ public class RestDocsTest extends PostgreSqlContainer {
         Person first = this.fetchFirst();
         this.webTestClient
                 .get()
-                .uri(API + "/" + first.getId())
+                .uri(API + "/" + first.id())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(first.getId())
-                .jsonPath("$.name").isEqualTo(first.getName())
+                .jsonPath("$.id").isEqualTo(first.id())
+                .jsonPath("$.name").isEqualTo(first.name())
                 .consumeWith(document("handle-find-by-id",
                         responseFields(
                                 fieldWithPath("id")
@@ -136,7 +135,7 @@ public class RestDocsTest extends PostgreSqlContainer {
         Person first = this.fetchFirst();
         this.webTestClient
                 .delete()
-                .uri(API + "/" + first.getId())
+                .uri(API + "/" + first.id())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -176,13 +175,13 @@ public class RestDocsTest extends PostgreSqlContainer {
         Person first = this.fetchFirst();
         this.webTestClient
                 .put()
-                .uri(API + "/" + first.getId())
-                .bodyValue(new Person(first.getId(), "Update"))
+                .uri(API + "/" + first.id())
+                .bodyValue(new Person(first.id(), "Update"))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(first.getId())
+                .jsonPath("$.id").isEqualTo(first.id())
                 .jsonPath("$.name").isEqualTo("Update")
                 .consumeWith(document("handle-update",
                         responseFields(
@@ -201,8 +200,8 @@ public class RestDocsTest extends PostgreSqlContainer {
         Person first = this.fetchFirst();
         this.webTestClient
                 .put()
-                .uri(API + "/" + first.getId())
-                .bodyValue(new Person(first.getId(), ""))
+                .uri(API + "/" + first.id())
+                .bodyValue(new Person(first.id(), ""))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isBadRequest()
@@ -229,7 +228,7 @@ public class RestDocsTest extends PostgreSqlContainer {
         Person first = this.fetchFirst();
         this.webTestClient
                 .put()
-                .uri(API + "/" + first.getId())
+                .uri(API + "/" + first.id())
                 .bodyValue(Optional.empty())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -286,5 +285,4 @@ public class RestDocsTest extends PostgreSqlContainer {
                 .expectBody()
                 .consumeWith(document("handle-create-invalid"));
     }
-
 }

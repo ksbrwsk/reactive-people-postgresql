@@ -104,7 +104,7 @@ public class PersonHandler {
                 .doOnNext(this::validate)
                 .flatMap(this.personRepository::save)
                 .flatMap(person ->
-                        created(URI.create(API + "/" + person.getId()))
+                        created(URI.create(API + "/" + person.id()))
                                 .bodyValue(person));
     }
 
@@ -120,7 +120,7 @@ public class PersonHandler {
                 .doOnNext(this::validate)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(BAD_REQUEST, "Body is required")));
         return this.personRepository.findById(id)
-                .zipWith(update, (person, personUpdate) -> new Person(person.getId(), personUpdate.getName()))
+                .zipWith(update, (person, personUpdate) -> new Person(person.id(), personUpdate.name()))
                 .flatMap(this.personRepository::save)
                 .flatMap(person -> ServerResponse.ok().bodyValue(person))
                 .switchIfEmpty(ServerResponse.notFound().build());
