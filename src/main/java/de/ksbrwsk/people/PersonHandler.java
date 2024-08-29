@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import static de.ksbrwsk.people.Constants.API;
-import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.ServerResponse.*;
 
@@ -36,6 +36,7 @@ public class PersonHandler {
 
     /**
      * Handles a request to get all persons.
+     *
      * @param serverRequest The incoming server request.
      * @return A ServerResponse with the list of all persons.
      */
@@ -46,6 +47,7 @@ public class PersonHandler {
 
     /**
      * Handles a request to get a person by id.
+     *
      * @param serverRequest The incoming server request.
      * @return A ServerResponse with the person found or a 404 status if not found.
      */
@@ -59,6 +61,7 @@ public class PersonHandler {
 
     /**
      * Handles a request to get the first person found by name.
+     *
      * @param serverRequest The incoming server request.
      * @return A ServerResponse with the person found or a 404 status if not found.
      */
@@ -74,6 +77,7 @@ public class PersonHandler {
 
     /**
      * Handles a request to delete a person by id.
+     *
      * @param serverRequest The incoming server request.
      * @return A ServerResponse with a success message or a 404 status if not found.
      */
@@ -90,6 +94,7 @@ public class PersonHandler {
 
     /**
      * Handles a request to create a new person.
+     *
      * @param serverRequest The incoming server request.
      * @return A ServerResponse with the created person or a 400 status if the request body is invalid.
      */
@@ -105,27 +110,25 @@ public class PersonHandler {
 
     /**
      * Handles a request to update a person by id.
+     *
      * @param serverRequest The incoming server request.
      * @return A ServerResponse with the updated person or a 404 status if not found.
      */
     public Mono<ServerResponse> handleUpdate(ServerRequest serverRequest) {
         var id = Long.parseLong(serverRequest.pathVariable("id"));
-        final Mono<Person> update = serverRequest.bodyToMono(Person.class)
+        var update = serverRequest.bodyToMono(Person.class)
                 .doOnNext(this::validate)
-                .switchIfEmpty(Mono.error(new ServerWebInputException("person must not be null")));
+                .switchIfEmpty(Mono.error(new ResponseStatusException(BAD_REQUEST, "Body is required")));
         return this.personRepository.findById(id)
-                .flatMap(old ->
-                        ok().body(
-                                fromPublisher(
-                                        update
-                                                .map(p -> new Person(id, p.getName()))
-                                                .flatMap(this.personRepository::save),
-                                        Person.class)))
-                .switchIfEmpty(notFound().build());
+                .zipWith(update, (person, personUpdate) -> new Person(person.getId(), personUpdate.getName()))
+                .flatMap(this.personRepository::save)
+                .flatMap(person -> ServerResponse.ok().bodyValue(person))
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
 
     /**
      * Validates a person using the Validator.
+     *
      * @param person The person to validate.
      * @throws ServerWebInputException If the person is not valid.
      */
@@ -142,6 +145,7 @@ public class PersonHandler {
 
     /**
      * Formats a validation error.
+     *
      * @param personConstraintViolation The validation error.
      * @return A string representation of the validation error.
      */

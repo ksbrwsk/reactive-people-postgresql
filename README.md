@@ -24,7 +24,7 @@
 
 If you have Docker installed, grab a PostgreSQL image from Docker Hub and run the image.
 ```bash
-docker pull postgres:15.4-alpine
+docker pull postgres:16-alpine
 docker run --name postgresql -e POSTGRESQL_PASSWORD=password123 -e POSTGRES_DB=spring -p 5432:5432 postgres:15.4-alpine
 ```
 Or else, grab the app image via 

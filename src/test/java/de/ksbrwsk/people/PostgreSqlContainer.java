@@ -10,7 +10,6 @@ public abstract class PostgreSqlContainer {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15.4-alpine")
-            .withInitScript("schema.sql")
-            .withReuse(true);
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+            .withInitScript("schema.sql");
 }
