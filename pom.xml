@@ -20,7 +20,7 @@
         <!-- NOTE: asciidoctor-maven-plugin version gt 3.0.0 incompatible with spring restdocs! -->
         <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
         <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
-        <spring-restdocs-asciidoctor.version>3.0.2</spring-restdocs-asciidoctor.version>
+        <spring-restdocs-asciidoctor.version>3.0.3</spring-restdocs-asciidoctor.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
     </properties>
     <scm>
